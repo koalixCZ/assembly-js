@@ -4,12 +4,32 @@ var htmlParser = require("htmlparser2"),
 	fs = require("fs");
 
 /**
+ * Returns true when string ends with the suffix.
+ * @param {string} str
+ * @param {string} suffix
+ * @return {boolean}
+ */
+function endsWith(str, suffix) {
+	return str && str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
+/**
  * Returns true when file or directory has to be excluded.
  * @param {string} state
  * @returns {boolean}
  */
 function isExcluded(state) {
-	return !state ? false : state.toLowerCase() === "true";
+	return state && state.toLowerCase() === "true";
+}
+
+/**
+ * Returns true if the script is
+ * @param {string} type
+ * @param {string} src
+ * @return {boolean}
+ */
+function isJavaScript(type, src) {
+	return type === "text/javascript" && src || endsWith(src, ".js");
 }
 
 /**
@@ -19,17 +39,13 @@ function isExcluded(state) {
  */
 function getScriptTagReader(appendScriptCallback) {
 	return {
-		onopentag: function (name, attrs) {
-			var isNotExcluded,
-				src;
+		onopentag: function (name, attributes) {
+			var src = attributes.src,
+				excluded = isExcluded(attributes["data-excluded"]),
+				javaScript = isJavaScript(attributes.type, attributes.src);
 
-			if (name === "script" && attrs.type === "text/javascript") {
-				isNotExcluded = !isExcluded(attrs["data-excluded"]);
-				src = attrs.src;
-
-				if (isNotExcluded && src) {
-					appendScriptCallback(src);
-				}
+			if (name === "script" && javaScript && !excluded) {
+				appendScriptCallback(src);
 			}
 		}
 	};
@@ -49,7 +65,12 @@ function getHtmlParser(callback) {
  * @param {function(string)} callback
  */
 function readSourceHtml(filename, callback) {
-	fs.readFile(filename, {encoding: "UTF-8", flag: "r"}, callback);
+	fs.readFile(filename, {encoding: "UTF-8", flag: "r"}, function (err, data) {
+		if (err) {
+			throw err;
+		}
+		callback(data);
+	});
 }
 
 /**
@@ -61,8 +82,8 @@ module.exports.parseHtmlAndReadScripts = function (htmlFile, callback) {
 	readSourceHtml(htmlFile, function (html) {
 		var parser,
 			scripts = [],
-			appendScript = function (fileName) {
-				scripts.push(fileName);
+			appendScript = function (filename) {
+				scripts.push(filename);
 			};
 
 		parser = getHtmlParser(appendScript);
