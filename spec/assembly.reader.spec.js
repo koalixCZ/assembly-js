@@ -16,4 +16,11 @@ describe("Read source file", function () {
 			done();
 		});
 	});
+
+	it("returns and empty when there is no source file", function (done) {
+		reader.readScripts([], function (code) {
+			expect(code).toEqual("");
+			done();
+		});
+	});
 });

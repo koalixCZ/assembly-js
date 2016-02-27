@@ -25,7 +25,6 @@ function transformArrayToString(sourceCode) {
 	return sourceCode.join("\n");
 }
 
-
 /**
  * @param {Array.<string>} sources
  * @param {function(string)} callback
@@ -43,7 +42,11 @@ module.exports.readScripts = function (sources, callback) {
 			}
 		};
 
-	sources.forEach(function (filename, index) {
-		readFile(filename, index, finish);
-	});
+	if (count === 0) {
+		callback("");
+	} else {
+		sources.forEach(function (filename, index) {
+			readFile(filename, index, finish);
+		});
+	}
 };
