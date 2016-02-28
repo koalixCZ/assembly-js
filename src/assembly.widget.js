@@ -11,6 +11,6 @@ function getSourceMapName() {
 }
 
 
-module.exports.widget = {
+module.exports = {
 	getSourceMapName: getSourceMapName
 };
