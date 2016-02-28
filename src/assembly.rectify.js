@@ -15,7 +15,10 @@ function rectifyIncompatibleOptions(options) {
 /**
  * Checks options for UglifyJS.
  * @param {object} options
+ * @param {object}
  */
 module.exports.rectifyOptions = function (options) {
 	rectifyIncompatibleOptions(options);
+
+	return options;
 };

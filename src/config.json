@@ -1,0 +1,18 @@
+{
+	"assembledJS": "production.js",
+	"sourceHtml": "index.html",
+	"directory": "",
+	"options": {
+		"beautify": false,
+		"preamble": "",
+		"compress": {
+			"warnings": false
+		},
+		"mangle": {},
+		"report": "min",
+		"expression": false,
+		"screw_ie8": false,
+		"source_map": null,
+		"quote_style": 0
+	}
+}
