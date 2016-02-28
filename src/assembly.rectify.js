@@ -15,10 +15,13 @@ function rectifyIncompatibleOptions(options) {
 /**
  * Checks options for UglifyJS.
  * @param {object} options
- * @param {object}
+ * @return {object}
  */
 module.exports.rectifyOptions = function (options) {
 	rectifyIncompatibleOptions(options);
+
+	//noinspection Eslint
+	options.source_map = null;
 
 	return options;
 };
