@@ -1,7 +1,6 @@
 "use strict";
 
 var UglifyJS = require("uglify-js"),
-	rectify = require("./assembly.rectify"),
 	widget = require("./assembly.widget"),
 	config = require("./config.json");
 
@@ -17,33 +16,33 @@ var UglifyJS = require("uglify-js"),
  * @return {string}
  */
 function addSourceMap(code) {
-	return code + "\n//# sourceMappingURL=" + widget.getSourceMapName();
+	if (config.sourceMap) {
+		return code + "\n//# sourceMappingURL=" + widget.getSourceMapName();
+	}
+	return code;
 }
 
 /**
  * Compress the source code.
  * @param {string} code
+ * @param {object} options
  * @return {Compressed}
  */
-function uglify(code) {
-	var options = rectify.rectifyOptions(config.options),
-		output = UglifyJS.OutputStream(null),
-		topLevel = UglifyJS.parse(code),
-		min;
+function uglify(code, options) {
+	var compressor = UglifyJS.Compressor(options.compress),
+		stream = UglifyJS.OutputStream(options),
+		ast = UglifyJS.parse(code);
 
-	// TODO Wrap
-	// TODO: Compress
-	// TODO: Mangle
+	ast.figure_out_scope();
+	ast.compute_char_frequency();
+	ast.mangle_names();
+	ast = ast.transform(compressor);
+	ast.print(stream);
 
-	// Print the ast to OutputStream
-	topLevel.print(output);
-	min = output.get();
-
-	if (options.sourceMap) {
-		min = addSourceMap(min);
-	}
-
-	return {code: min, sourceMap: options.source_map};
+	return {
+		code: addSourceMap(stream.get()),
+		sourceMap: options.source_map
+	};
 }
 
 /**
@@ -52,7 +51,10 @@ function uglify(code) {
  * @return {Compressed}
  */
 module.exports.uglify = function (sourceCode) {
-	var compressed = uglify(sourceCode);
+	var options = config.options;
 
-	return compressed;
+	widget.rectifyIncompatibleOptions(options);
+	widget.setupSourceMap(options);
+
+	return uglify(sourceCode, options);
 };

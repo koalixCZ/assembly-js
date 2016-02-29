@@ -1,10 +1,8 @@
 "use strict";
 
-var UglifyJS = require("uglify-js"),
-	fs = require("fs"),
+var fs = require("fs"),
 	parser = require("./assembly.parser"),
 	reader = require("./assembly.reader"),
-	rectify = require("./assembly.rectify.js"),
 	config = require("./config.json");
 
 /**
