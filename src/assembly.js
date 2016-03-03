@@ -3,6 +3,7 @@
 var fs = require("fs"),
 	parser = require("./assembly.parser"),
 	reader = require("./assembly.reader"),
+	uglify = require("./assembly.uglify"),
 	config = require("./config.json");
 
 /**
@@ -46,7 +47,11 @@ module.exports.assembly = function (callback) {
 
 	parser.parseHtmlAndReadScripts(htmlFile, function (sources) {
 		reader.readScripts(updateSourcePath(directory, sources), function (sourceCode) {
-			writeFile(assembledJS, sourceCode, callback);
+			writeFile(assembledJS, uglify.uglify(sourceCode), function () {
+				if (callback && typeof callback === "function") {
+					callback();
+				}
+			});
 		});
 	});
 };
