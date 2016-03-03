@@ -4,6 +4,7 @@ var fs = require("fs"),
 	parser = require("./assembly.parser"),
 	reader = require("./assembly.reader"),
 	uglify = require("./assembly.uglify"),
+	widget = require("./assembly.widget"),
 	config = require("./config.json");
 
 /**
@@ -47,11 +48,18 @@ module.exports.assembly = function (callback) {
 
 	parser.parseHtmlAndReadScripts(htmlFile, function (sources) {
 		reader.readScripts(updateSourcePath(directory, sources), function (sourceCode) {
-			writeFile(assembledJS, uglify.uglify(sourceCode), function () {
-				if (callback && typeof callback === "function") {
-					callback();
-				}
-			});
+			var compressed = uglify.uglify(sourceCode),
+				waiting = 2,
+				finish = function () {
+					waiting -= 1;
+
+					if (waiting === 0 && callback && typeof callback === "function") {
+						callback();
+					}
+				};
+
+			writeFile(assembledJS, compressed.code, finish);
+			writeFile(widget.getSourceMapName(), compressed.sourceMap, finish);
 		});
 	});
 };
