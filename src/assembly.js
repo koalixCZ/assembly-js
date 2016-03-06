@@ -35,15 +35,15 @@ function pathToTargetDirectory(filename, directory) {
 
 /**
  * Updates path of source files.
- * @param {string} path
+ * @param {string} directory
  * @param {Array.<string>} sources
  * @return {Array.<string>}
  */
-function updateSourcePath(path, sources) {
+function updateSourcePath(directory, sources) {
 	var array = [];
 
 	sources.forEach(function (filename) {
-		array.push(path + filename);
+		array.push(path.join(directory, filename));
 	});
 	return array;
 }
