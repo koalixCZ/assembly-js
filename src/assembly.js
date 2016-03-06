@@ -1,6 +1,7 @@
 "use strict";
 
 var fs = require("fs"),
+	path = require("path"),
 	parser = require("./assembly.parser"),
 	reader = require("./assembly.reader"),
 	uglify = require("./assembly.uglify"),
@@ -20,6 +21,16 @@ function writeFile(filename, data, callback) {
 		}
 		callback();
 	});
+}
+
+/**
+ * Formats pat to the target directory.
+ * @param {string} filename
+ * @param {string} directory
+ * @return {string}
+ */
+function pathToTargetDirectory(filename, directory) {
+	return path.join(directory, filename);
 }
 
 /**
@@ -43,12 +54,16 @@ function updateSourcePath(path, sources) {
  */
 module.exports.assembly = function (callback) {
 	var assembledJS = config.assembledJS,
-		htmlFile = config.sourceHtml,
-		directory = config.directory;
+		source = config.source,
+		htmlFile = source.html,
+		directory = source.directory,
+		targetDirectory = config.targetDirectory;
 
 	parser.parseHtmlAndReadScripts(htmlFile, function (sources) {
 		reader.readScripts(updateSourcePath(directory, sources), function (sourceCode) {
 			var compressed = uglify.uglify(sourceCode),
+				assembledJSPath = pathToTargetDirectory(assembledJS, targetDirectory),
+				sourceMapPath = pathToTargetDirectory(widget.getSourceMapName(), targetDirectory),
 				waiting = 2,
 				finish = function () {
 					waiting -= 1;
@@ -58,8 +73,8 @@ module.exports.assembly = function (callback) {
 					}
 				};
 
-			writeFile(assembledJS, compressed.code, finish);
-			writeFile(widget.getSourceMapName(), compressed.sourceMap, finish);
+			writeFile(assembledJSPath, compressed.code, finish);
+			writeFile(sourceMapPath, compressed.sourceMap, finish);
 		});
 	});
 };

@@ -1,18 +1,22 @@
 {
 	"name": "assembly-js",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Assembly the JavaScript",
 	"main": "assembly-js.js",
-	"dependencies": {},
+	"dependencies": {
+		"fs-extra": "^0.26.5",
+		"htmlparser2": "^3.9.0",
+		"path": "^0.12.7",
+		"uglify-js": "^2.6.2"
+	},
 	"devDependencies": {
 		"eslint": "^2.2.0",
-		"htmlparser2": "^3.9.0",
 		"jasmine": "^2.4.1",
-		"uglify-js": "^2.6.2"
 	},
 	"author": "koalix",
 	"license": "MIT",
 	"scripts": {
+		"build": "node ./script/build",
 		"test": "node ./node_modules/jasmine/bin/jasmine"
 	}
 }

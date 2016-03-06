@@ -1,8 +1,10 @@
 {
 	"assembledJS": "production.js",
-	"sourceHtml": "index.html",
+	"targetDirectory": "bin",
+	"source": {
+		"html": "index.html",
+		"directory": ""
+	},
 	"sourceMap": true,
-	"directory": "",
-
 	"options": {}
 }
