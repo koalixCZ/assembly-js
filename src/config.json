@@ -2,8 +2,8 @@
 	"assembledJS": "production.js",
 	"targetDirectory": "bin",
 	"source": {
-		"html": "index.html",
-		"directory": ""
+		"html": "spec/sample/index.html",
+		"directory": "spec/sample"
 	},
 	"sourceMap": true,
 	"options": {}
