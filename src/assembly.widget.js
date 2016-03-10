@@ -24,7 +24,7 @@ function rectifyIncompatibleOptions(options) {
 }
 
 /**
- * Setup the spurce map.
+ * Setup the source map.
  * @param {object} options
  */
 function setupSourceMap(options) {
