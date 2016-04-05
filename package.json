@@ -10,7 +10,7 @@
 		"uglify-js": "^2.6.2"
 	},
 	"devDependencies": {
-		"eslint": "^2.4.0",
+		"eslint": "^2.7.0",
 		"jasmine": "^2.4.1"
 	},
 	"author": "koalix",
