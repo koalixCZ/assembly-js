@@ -1,0 +1,5 @@
+script
+spec
+.eslintrc
+.gitignore
+.npmignore
