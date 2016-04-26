@@ -4,13 +4,13 @@
 	"description": "Assembly the JavaScript",
 	"main": "src/assembly.js",
 	"dependencies": {
-		"fs-extra": "^0.26.5",
 		"htmlparser2": "^3.9.0",
 		"path": "^0.12.7",
 		"uglify-js": "^2.6.2"
 	},
 	"devDependencies": {
 		"eslint": "^2.7.0",
+		"fs-extra": "^0.26.5",
 		"jasmine": "^2.4.1"
 	},
 	"repository": {
