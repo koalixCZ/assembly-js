@@ -1,5 +1,5 @@
 {
-	"assembledJS": "production.js",
+	"assembledJS": "assembly.js",
 	"targetDirectory": "bin",
 	"source": {
 		"html": "spec/sample/index.html",
