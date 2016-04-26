@@ -3,7 +3,7 @@
 	"targetDirectory": "bin",
 	"source": {
 		"html": "spec/sample/index.html",
-		"directory": "spec/sample"
+		"directory": "src/"
 	},
 	"sourceMap": true,
 	"options": {}

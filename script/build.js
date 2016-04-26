@@ -6,11 +6,21 @@ var fsx = require("fs-extra"),
 
 (function () {
 	fsx.emptyDir(config.targetDirectory, function (err) {
+		var arrayOfSources;
+
 		if (err) {
 			throw err;
 		}
 
-		assembly.assembly(function () {
+		arrayOfSources = [
+			"assembly.parser.js",
+			"assembly.reader.js",
+			"assembly.widget.js",
+			"assembly.uglify.js",
+			"assembly.js"
+		];
+
+		assembly.assemblyFromArrayOfSources(arrayOfSources, function () {
 			console.log("Ready");
 		});
 	});

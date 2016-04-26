@@ -49,32 +49,49 @@ function updateSourcePath(directory, sources) {
 }
 
 /**
- * Assembly JavaScript file from src attributes, uglify and invoke callback when finished.
+ * Assembly JavaScript from an array of source files.
+ * @param {Array.<string>} sources
  * @param {function} callback
  */
-module.exports.assembly = function (callback) {
+function assembly(sources, callback) {
 	var assembledJS = config.assembledJS,
 		source = config.source,
-		htmlFile = source.html,
 		directory = source.directory,
 		targetDirectory = config.targetDirectory;
 
-	parser.parseHtmlAndReadScripts(htmlFile, function (sources) {
-		reader.readScripts(updateSourcePath(directory, sources), function (sourceCode) {
-			var compressed = uglify.uglify(sourceCode),
-				assembledJSPath = pathToTargetDirectory(assembledJS, targetDirectory),
-				sourceMapPath = pathToTargetDirectory(widget.getSourceMapName(), targetDirectory),
-				waiting = 2,
-				finish = function () {
-					waiting -= 1;
+	reader.readScripts(updateSourcePath(directory, sources), function (sourceCode) {
+		var compressed = uglify.uglify(sourceCode),
+			assembledJSPath = pathToTargetDirectory(assembledJS, targetDirectory),
+			sourceMapPath = pathToTargetDirectory(widget.getSourceMapName(), targetDirectory),
+			waiting = 2,
+			finish = function () {
+				waiting -= 1;
 
-					if (waiting === 0 && callback && typeof callback === "function") {
-						callback();
-					}
-				};
+				if (waiting === 0 && callback && typeof callback === "function") {
+					callback();
+				}
+			};
 
-			writeFile(assembledJSPath, compressed.code, finish);
-			writeFile(sourceMapPath, compressed.sourceMap, finish);
-		});
+		writeFile(assembledJSPath, compressed.code, finish);
+		writeFile(sourceMapPath, compressed.sourceMap, finish);
 	});
+}
+
+/**
+ * Assembly JavaScript file from src attributes, uglify and invoke callback when finished.
+ * @param {function} callback
+ */
+module.exports.assemblyFromHtml = function (callback) {
+	parser.parseHtmlAndReadScripts(config.source.html, function (sources) {
+		assembly(sources, callback);
+	});
+};
+
+/**
+ * Assembly JavaScript file from an array of source files.
+ * @param {Array.<string>} sources
+ * @param {function} callback
+ */
+module.exports.assemblyFromArrayOfSources = function (sources, callback) {
+	assembly(sources, callback);
 };
